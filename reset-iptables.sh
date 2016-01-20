@@ -1,7 +1,10 @@
 #!/bin/bash
 # Author: Yevgeniy Goncharov aka xck, http://sys-admin.kz
 
-stat=$(/sbin/iptables -L -v -n);
+#stat=$(/sbin/iptables -L -v -n);
+
+echo -e "\nBackup IPTABLES"
+/bin/cp /etc/sysconfig/iptables /etc/sysconfig/iptables_$(date +%Y%m%d).bak
 
 echo -e "\nStop IPTABLES"
 /sbin/service iptables stop
@@ -31,6 +34,8 @@ $IPTABLES -t mangle -X
 echo -e "\nStart IPTABLES"
 /sbin/service iptables start
 
+/sbin/service iptables save
+/sbin/service iptables reload
 
-echo -e "\n$stat\n"
+echo -e "\n$(/sbin/iptables -L -v -n)\n"
 echo "Done!"
